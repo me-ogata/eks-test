@@ -1,4 +1,5 @@
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
   a:
@@ -7,27 +8,35 @@ jobs:
     timeout-minutes: 10
     steps:
       - run: echo "A"
-      - id: set
-        run: |
-          echo "::set-output name=run_job_b::no"
-    outputs:
-      run_job_b: ${{ steps.set.outputs.run_job_b }}
   b:
-    name: b
+    name: a
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - a
-    if: needs.a.outputs.run_job_b == 'yes'
     steps:
       - run: echo "B"
+      - id: set
+        run: |
+          echo "::set-output name=run_job_c::yes"
+    outputs:
+      run_job_c: ${{ steps.set.outputs.run_job_c }}
   c:
     name: c
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
-      - a
       - b
-    if: ${{ success() || failure() }} && needs.b.result == 'success'
+    if: needs.b.outputs.run_job_c == 'yes'
     steps:
       - run: echo "C"
+  d:
+    name: d
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - b
+      - c
+    if: needs.c.result == 'success'
+    steps:
+      - run: echo "D"
