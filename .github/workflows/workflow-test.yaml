@@ -9,25 +9,25 @@ jobs:
     steps:
       - run: echo "A"
   b:
-    name: error-job
+    name: succes-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - a
-    if: always()
+    if: ${{ success() || failure() }}
     steps:
       - run: echo "B"
       - name: mkdir
         id: mkdir
         run: |
           mkdir hoge
-          mkdir hoge
+          # mkdir hoge
   c:
     name: test-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - b
-    if: always() && needs.b.result == 'success'
+    if: ${{ success() || failure() }} && needs.b.result == 'success'
     steps:
       - run: echo "C"
