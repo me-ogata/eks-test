@@ -28,6 +28,6 @@ jobs:
     needs:
       - a
       - b
-    if: needs.b.result == 'success'
+    if: ${{ success() || failure() }} && needs.b.result == 'success'
     steps:
       - run: echo "C"
