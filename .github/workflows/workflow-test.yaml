@@ -14,6 +14,7 @@ jobs:
     timeout-minutes: 10
     needs:
       - a
+    if: ${{ success() || failure() }}
     steps:
       - run: echo "B"
       - id: set
@@ -27,7 +28,7 @@ jobs:
     timeout-minutes: 10
     needs:
       - b
-    if: needs.b.outputs.run_job_c == 'yes'
+    if: ${{ success() || failure() }} && needs.b.outputs.run_job_c == 'yes'
     steps:
       - run: echo "C"
   d:
@@ -37,6 +38,6 @@ jobs:
     needs:
       - b
       - c
-    if: needs.c.result == 'success'
+    if: ${{ success() || failure() }} && needs.c.result == 'success'
     steps:
       - run: echo "D"
