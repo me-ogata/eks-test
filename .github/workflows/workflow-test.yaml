@@ -9,12 +9,12 @@ jobs:
     steps:
       - run: echo "A"
   b:
-    name: success-job
+    name: skipped-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - a
-    if: always()
+    if: "false"
     steps:
       - run: echo "B"
       - name: mkdir
