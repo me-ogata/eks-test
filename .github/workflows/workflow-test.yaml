@@ -1,11 +1,11 @@
-on:
-  workflow_dispatch:
+on: [push]
 
 jobs:
   a:
     name: a
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: "false"
     steps:
       - run: echo "A"
   b:
