@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
-      - b
-    if: always() && needs.b.outputs.run_job_c == 'yes'
+      - a
+    if: always() && needs.a.result == 'success'
     steps:
       - run: echo "C"
