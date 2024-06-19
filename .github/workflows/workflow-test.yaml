@@ -2,42 +2,32 @@ on: [push]
 
 jobs:
   a:
-    name: a
+    name: skipped-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: "false"
     steps:
       - run: echo "A"
   b:
-    name: b
+    name: error-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - a
-    if: ${{ success() || failure() }}
+    if: always()
     steps:
       - run: echo "B"
-      - id: set
+      - name: mkdir
+        id: mkdir
         run: |
-          echo "::set-output name=run_job_c::no"
-    outputs:
-      run_job_c: ${{ steps.set.outputs.run_job_c }}
+          mkdir hoge
+          mkdir hoge
   c:
-    name: c
+    name: test-job
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - b
-    if: ${{ success() || failure() }} && needs.b.outputs.run_job_c == 'yes'
+    if: always() && needs.b.outputs.run_job_c == 'yes'
     steps:
       - run: echo "C"
-  d:
-    name: d
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs:
-      - b
-      - c
-    if: ${{ success() || failure() }} && needs.c.result == 'success'
-    steps:
-      - run: echo "D"
