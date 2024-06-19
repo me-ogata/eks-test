@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
-      - b
+      - a
     if: ${{ success() || failure() }} && needs.b.result == 'success'
     steps:
       - run: echo "B"
